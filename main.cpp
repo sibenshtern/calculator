@@ -8,7 +8,7 @@ void clean_up_mess(Token_stream &ts) {
     ts.ignore(print);
 }
 
-void calculate(Token_stream &ts, std::vector<Variable> &var_table) {
+void calculate(Token_stream &ts, Symbol_table &variables) {
     while (std::cin) {
         try {
             std::cout << prompt;
@@ -19,7 +19,7 @@ void calculate(Token_stream &ts, std::vector<Variable> &var_table) {
                 return;
 
             ts.putback(t);
-            std::cout << result << statement(ts, var_table) << '\n';
+            std::cout << result << statement(ts, variables) << '\n';
         }
         catch (std::runtime_error &e) {
             std::cerr << e.what() << '\n';
@@ -30,13 +30,13 @@ void calculate(Token_stream &ts, std::vector<Variable> &var_table) {
 
 int main() {
     Token_stream ts;
-    std::vector<Variable> var_table;
+    Symbol_table variables;
 
     try {
-        define_name("pi", 3.141592653589793, var_table);
-        define_name("e", 2.718281828459045, var_table);
+        variables.define("pi", 3.141592653589793);
+        variables.define("e", 2.718281828459045);
 
-        calculate(ts, var_table);
+        calculate(ts, variables);
         return 0;
     }
     catch (std::runtime_error &e) {

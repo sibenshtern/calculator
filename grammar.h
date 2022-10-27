@@ -8,15 +8,15 @@
 
 template<class R, class A> R narrow_cast(const A &a);
 
-double statement(Token_stream &ts, std::vector<Variable> &var_table);
+double statement(Token_stream &ts, Symbol_table &variables);
 
-double primary(Token_stream &ts, std::vector<Variable> &var_table);
+double primary(Token_stream &ts, Symbol_table &variables);
 
-double term(Token_stream &ts, std::vector<Variable> &var_table);
+double term(Token_stream &ts, Symbol_table &variables);
 
-double expression(Token_stream &ts, std::vector<Variable> &var_table);
+double expression(Token_stream &ts, Symbol_table &variables);
 
-double declaration(Token_stream &ts, std::vector<Variable> &var_table);
+double declaration(Token_stream &ts, Symbol_table &variables);
 
 void clean_up_mess(Token_stream &ts);
 

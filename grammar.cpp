@@ -8,39 +8,39 @@ template<class R, class A> R narrow_cast(const A &a) {
     return r;
 }
 
-double primary(Token_stream &ts, std::vector<Variable> &var_table) {
+double primary(Token_stream &ts, Symbol_table &variables) {
     Token t = ts.get();
     switch (t.kind) {
         case '(': {
-            double d = expression(ts, var_table);
+            double d = expression(ts, variables);
             t = ts.get();
             if (t.kind != ')')
                 throw std::runtime_error("'(' expected");
             return d;
         }
         case '-':
-            return -primary(ts, var_table);
+            return -primary(ts, variables);
         case '+':
-            return primary(ts, var_table);
+            return primary(ts, variables);
         case number:
             return t.value;
         case name:
-            return get_value(t.name, var_table);
+            return variables.get(t.name);
         default:
             throw std::runtime_error("primary expected");
     }
 }
 
-double term(Token_stream &ts, std::vector<Variable> &var_table) {
-    double left = primary(ts, var_table);
+double term(Token_stream &ts, Symbol_table &variables) {
+    double left = primary(ts, variables);
     while (true) {
         Token t = ts.get();
         switch (t.kind) {
             case '*':
-                left *= primary(ts, var_table);
+                left *= primary(ts, variables);
                 break;
             case '/': {
-                double d = primary(ts, var_table);
+                double d = primary(ts, variables);
                 if (d == 0)
                     throw std::runtime_error("Division by zero");
                 left /= d;
@@ -48,7 +48,7 @@ double term(Token_stream &ts, std::vector<Variable> &var_table) {
             }
             case '%': {
                 int i1 = narrow_cast<int>(left);
-                int i2 = narrow_cast<int>(primary(ts, var_table));
+                int i2 = narrow_cast<int>(primary(ts, variables));
 
                 if (i2 == 0)
                     throw std::runtime_error("Division by zero");
@@ -63,17 +63,17 @@ double term(Token_stream &ts, std::vector<Variable> &var_table) {
     }
 }
 
-double expression(Token_stream &ts, std::vector<Variable> &var_table) {
-    double left = term(ts, var_table);
+double expression(Token_stream &ts, Symbol_table &variables) {
+    double left = term(ts, variables);
 
     while (true) {
         Token t = ts.get();
         switch (t.kind) {
             case '+':
-                left += term(ts, var_table);
+                left += term(ts, variables);
                 break;
             case '-':
-                left -= term(ts, var_table);
+                left -= term(ts, variables);
                 break;
             default:
                 ts.putback(t);
@@ -82,29 +82,29 @@ double expression(Token_stream &ts, std::vector<Variable> &var_table) {
     }
 }
 
-double declaration(Token_stream &ts, std::vector<Variable> &var_table) {
+double declaration(Token_stream &ts, Symbol_table &variables) {
     Token t = ts.get();
     if (t.kind != name)
         throw std::runtime_error("name expected in declaration");
 
     std::string var = t.name;
-    if (is_declared(var, var_table))
+    if (variables.is_declared(var))
         throw std::runtime_error(var + " declared twice");
 
     t = ts.get();
     if (t.kind != '=')
         throw std::runtime_error("'=' missing in declaration of " + var);
 
-    return define_name(var, expression(ts, var_table), var_table);
+    return variables.define(var, expression(ts, variables));
 }
 
-double statement(Token_stream &ts, std::vector<Variable> &var_table) {
+double statement(Token_stream &ts, Symbol_table &variables) {
     Token t = ts.get();
     switch (t.kind) {
         case let:
-            return declaration(ts, var_table);
+            return declaration(ts, variables);
         default:
             ts.putback(t);
-            return expression(ts, var_table);
+            return expression(ts, variables);
     }
 }

@@ -1,36 +1,49 @@
 #include <stdexcept>
+#include <string>
+#include <algorithm>
+
 #include "variable.h"
 
-double get_value(std::string s, std::vector<Variable> &var_table) {
-    for (int i = 0; i < var_table.size(); ++i)
-        if (var_table[i].name == s)
-            return var_table[i].value;
+double Symbol_table::get(std::string name) {
+    for (const Variable &variable: var_table)
+        if (variable.name == name)
+            return variable.value;
 
-    throw std::runtime_error("get: undefined name " + s);
+    throw std::runtime_error("get: undefined name" + name);
 }
 
-void set_value(std::string s, double d, std::vector<Variable> &var_table) {
+void Symbol_table::set(std::string name, double value) {
     for (int i = 0; i <= var_table.size(); ++i) {
-        if (var_table[i].name == s) {
-            var_table[i].value = d;
+        if (var_table[i].name == name) {
+            var_table[i].value = value;
             return;
         }
     }
-    throw std::runtime_error("set: undefined name " + s);
+
+    throw std::runtime_error("set: undefined name " + name);
 }
 
-bool is_declared(std::string s, std::vector<Variable> &var_table) {
-    for (int i = 0; i < var_table.size(); ++i)
-        if (var_table[i].name == s)
+bool Symbol_table::is_declared(std::string name) {
+    for (const Variable &variable: var_table)
+        if (variable.name == name)
             return true;
+
     return false;
 }
 
-double define_name(std::string var, double val, std::vector<Variable> &var_table) {
-    if (is_declared(var, var_table))
-        set_value(var, val, var_table);
+double Symbol_table::define(std::string name, double value) {
+    if (is_declared(name) && is_const(name))
+        set(name, value);
     else
-        var_table.push_back(Variable{var, val});
+        var_table.push_back(Variable{name, value});
 
-    return val;
+    return value;
+}
+
+bool Symbol_table::is_const(std::string name) {
+    for (const Variable &variable: var_table)
+        if (variable.name == name && variable.is_const())
+            return true;
+
+    return false;
 }

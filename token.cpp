@@ -55,7 +55,7 @@ Token Token_stream::get() {
                 s += ch;
 
                 while (std::cin.get(ch) &&
-                       (std::isalpha(ch) || std::isdigit(ch)))
+                       (std::isalpha(ch) || std::isdigit(ch) || ch == '_'))
                     s += ch;
 
                 std::cin.putback(ch);

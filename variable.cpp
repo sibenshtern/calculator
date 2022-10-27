@@ -28,8 +28,9 @@ bool is_declared(std::string s, std::vector<Variable> &var_table) {
 
 double define_name(std::string var, double val, std::vector<Variable> &var_table) {
     if (is_declared(var, var_table))
-        throw std::runtime_error(var + " declated twice");
+        set_value(var, val, var_table);
+    else
+        var_table.push_back(Variable{var, val});
 
-    var_table.push_back(Variable{var, val});
     return val;
 }

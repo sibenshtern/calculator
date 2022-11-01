@@ -82,20 +82,27 @@ double expression(Token_stream &ts, Symbol_table &variables) {
     }
 }
 
-double declaration(Token_stream &ts, Symbol_table &variables) {
+double declaration(Token_stream &ts, Symbol_table &variables, bool is_const) {
     Token t = ts.get();
     if (t.kind != name)
         throw std::runtime_error("name expected in declaration");
 
     std::string var = t.name;
-    if (variables.is_declared(var))
-        throw std::runtime_error(var + " declared twice");
+    if (variables.is_declared(var) && variables.is_const(var) && !is_const)
+        throw std::runtime_error("variable '" + var + "' already defined as const");
+    if (variables.is_declared(var) && !variables.is_const(var) && is_const)
+        throw std::runtime_error("variable '" + var + "' already defined as usual variable");
+    if (variables.is_declared(var) && variables.is_const(var) && is_const)
+        throw std::runtime_error("can't change const variable");
 
     t = ts.get();
     if (t.kind != '=')
         throw std::runtime_error("'=' missing in declaration of " + var);
 
-    return variables.define(var, expression(ts, variables));
+    if (variables.is_declared(var) && !is_const)
+        return variables.define(var, expression(ts, variables));
+
+    return variables.define(var, expression(ts, variables), is_const);
 }
 
 double statement(Token_stream &ts, Symbol_table &variables) {
@@ -103,6 +110,8 @@ double statement(Token_stream &ts, Symbol_table &variables) {
     switch (t.kind) {
         case let:
             return declaration(ts, variables);
+        case clet:
+            return declaration(ts, variables, true);
         default:
             ts.putback(t);
             return expression(ts, variables);

@@ -16,7 +16,7 @@ double term(Token_stream &ts, Symbol_table &variables);
 
 double expression(Token_stream &ts, Symbol_table &variables);
 
-double declaration(Token_stream &ts, Symbol_table &variables);
+double declaration(Token_stream &ts, Symbol_table &variables, bool = false);
 
 void clean_up_mess(Token_stream &ts);
 

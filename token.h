@@ -32,9 +32,11 @@ constexpr char print = ';';
 constexpr char number = '8';
 constexpr char name = 'a';
 constexpr char let = 'L';
+constexpr char clet = 'C';
 
 const std::string prompt = "> ";
 const std::string result = "= ";
 const std::string declkey = "let";
+const std::string cdeclkey = "const";
 
 #endif //CALCULATOR_TOKEN_H

@@ -31,11 +31,13 @@ bool Symbol_table::is_declared(std::string name) {
     return false;
 }
 
-double Symbol_table::define(std::string name, double value) {
-    if (is_declared(name) && is_const(name))
+double Symbol_table::define(std::string name, double value, bool _is_const) {
+    if (is_declared(name) && !is_const(name))
         set(name, value);
-    else
-        var_table.push_back(Variable{name, value});
+    else if (is_declared(name) && is_const(name))
+        throw std::runtime_error("can't change const variable");
+
+    var_table.push_back(Variable{name, value, _is_const});
 
     return value;
 }

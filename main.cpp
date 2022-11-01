@@ -33,8 +33,8 @@ int main() {
     Symbol_table variables;
 
     try {
-        variables.define("pi", 3.141592653589793);
-        variables.define("e", 2.718281828459045);
+        variables.define("pi", 3.141592653589793, true);
+        variables.define("e", 2.718281828459045, true);
 
         calculate(ts, variables);
         return 0;

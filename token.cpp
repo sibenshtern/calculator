@@ -62,6 +62,8 @@ Token Token_stream::get() {
 
                 if (s == declkey)
                     return Token{let};
+                if (s == cdeclkey)
+                    return Token{clet};
                 return Token{name, s};
             }
             throw std::runtime_error("Bad token");

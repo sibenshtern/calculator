@@ -16,9 +16,15 @@ Token Token_stream::get() {
     }
 
     char ch;
-    std::cin >> ch;
+    std::cin.get(ch);
+
+    while (std::isblank(ch))
+        std::cin.get(ch);
 
     switch (ch) {
+        case '\n':
+            return Token{';'};
+
         case '(':
         case ')':
         case '+':

@@ -15,7 +15,8 @@ void print_help(Token_stream &ts) {
 void calculate(Token_stream &ts, Symbol_table &variables) {
     while (std::cin) {
         try {
-            std::cout << prompt;
+            if (std::cin.peek() == '\n')
+                std::cout << prompt;
             Token t = ts.get();
             while (t.kind == print)
                 t = ts.get();

@@ -8,6 +8,10 @@ void clean_up_mess(Token_stream &ts) {
     ts.ignore(print);
 }
 
+void print_help(Token_stream &ts) {
+    std::cout << "HELP HELP" << '\n';
+}
+
 void calculate(Token_stream &ts, Symbol_table &variables) {
     while (std::cin) {
         try {
@@ -15,11 +19,17 @@ void calculate(Token_stream &ts, Symbol_table &variables) {
             Token t = ts.get();
             while (t.kind == print)
                 t = ts.get();
+
             if (t.kind == quit)
                 return;
-
-            ts.putback(t);
-            std::cout << result << statement(ts, variables) << '\n';
+            if (t.kind == help) {
+                print_help(ts);
+                t = ts.get();
+            }
+            else {
+                ts.putback(t);
+                std::cout << result << statement(ts, variables) << '\n';
+            }
         }
         catch (std::runtime_error &e) {
             std::cerr << e.what() << '\n';

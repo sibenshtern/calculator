@@ -28,7 +28,6 @@ Token Token_stream::get() {
         case '%':
         case '=':
         case print:
-        case quit:
             return Token{ch};
 
         case '.':
@@ -64,6 +63,10 @@ Token Token_stream::get() {
                     return Token{let};
                 if (s == cdeclkey)
                     return Token{clet};
+                if (s == quitkey)
+                    return Token{quit};
+                if (s == helpkey)
+                    return Token{help};
                 return Token{name, s};
             }
             throw std::runtime_error("Bad token");

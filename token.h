@@ -28,6 +28,7 @@ private:
 };
 
 constexpr char quit = 'q';
+constexpr char help = 'h';
 constexpr char print = ';';
 constexpr char number = '8';
 constexpr char name = 'a';
@@ -38,5 +39,7 @@ const std::string prompt = "> ";
 const std::string result = "= ";
 const std::string declkey = "let";
 const std::string cdeclkey = "const";
+const std::string quitkey = "quit";
+const std::string helpkey = "help";
 
 #endif //CALCULATOR_TOKEN_H

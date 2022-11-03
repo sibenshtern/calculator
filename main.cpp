@@ -68,7 +68,12 @@ void clean_up_mess(Token_stream &ts) {
 }
 
 void print_help(Token_stream &ts) {
-    std::cout << "HELP HELP" << '\n';
+    std::cout << "Объявление переменной:" << '\n'
+              << "let Имя = Выражение\nconst Имя = Выражение\n\n"
+              << "Операции:\n+, -, /, %, ^, *\n\n"
+              << "Вывод выражения: ;, \\n\n\n"
+              << "Справка: help\n"
+              << "Выход: quit\n";
 }
 
 void calculate(Token_stream &ts, Symbol_table &variables) {

@@ -1,5 +1,6 @@
 #include "grammar.h"
 #include <stdexcept>
+#include <cmath>
 
 template<class R, class A> R narrow_cast(const A &a) {
     R r = R(a);
@@ -36,6 +37,10 @@ double term(Token_stream &ts, Symbol_table &variables) {
     while (true) {
         Token t = ts.get();
         switch (t.kind) {
+            case '^': {
+                left = std::pow(left, primary(ts, variables));
+                break;
+            }
             case '*':
                 left *= primary(ts, variables);
                 break;

@@ -8,16 +8,16 @@
 
 template<class R, class A> R narrow_cast(const A &a);
 
-double statement(Token_stream &ts, Symbol_table &variables);
+double statement(TokenStream &ts, SymbolTable &variables);
 
-double primary(Token_stream &ts, Symbol_table &variables);
+double primary(TokenStream &ts, SymbolTable &variables);
 
-double term(Token_stream &ts, Symbol_table &variables);
+double term(TokenStream &ts, SymbolTable &variables);
 
-double expression(Token_stream &ts, Symbol_table &variables);
+double expression(TokenStream &ts, SymbolTable &variables);
 
-double declaration(Token_stream &ts, Symbol_table &variables, bool = false);
+double declaration(TokenStream &ts, SymbolTable &variables, bool = false);
 
-void clean_up_mess(Token_stream &ts);
+void clean_up_mess(TokenStream &ts);
 
 #endif //CALCULATOR_GRAMMAR_H

@@ -2,6 +2,9 @@
 #include <stdexcept>
 #include <cmath>
 
+// secondary
+// tertiary
+
 template<class R, class A> R narrow_cast(const A &a) {
     R r = R(a);
     if (A(r) != a)
@@ -9,7 +12,7 @@ template<class R, class A> R narrow_cast(const A &a) {
     return r;
 }
 
-double primary(Token_stream &ts, Symbol_table &variables) {
+double primary(TokenStream &ts, SymbolTable &variables) {
     Token t = ts.get();
     switch (t.kind) {
         case '(': {
@@ -32,15 +35,11 @@ double primary(Token_stream &ts, Symbol_table &variables) {
     }
 }
 
-double term(Token_stream &ts, Symbol_table &variables) {
+double secondary(TokenStream &ts, SymbolTable &variables) {
     double left = primary(ts, variables);
     while (true) {
         Token t = ts.get();
         switch (t.kind) {
-            case '^': {
-                left = std::pow(left, primary(ts, variables));
-                break;
-            }
             case '*':
                 left *= primary(ts, variables);
                 break;
@@ -68,17 +67,19 @@ double term(Token_stream &ts, Symbol_table &variables) {
     }
 }
 
-double expression(Token_stream &ts, Symbol_table &variables) {
-    double left = term(ts, variables);
+double tertiary();
+
+double expression(TokenStream &ts, SymbolTable &variables) {
+    double left = secondary(ts, variables);
 
     while (true) {
         Token t = ts.get();
         switch (t.kind) {
             case '+':
-                left += term(ts, variables);
+                left += secondary(ts, variables);
                 break;
             case '-':
-                left -= term(ts, variables);
+                left -= secondary(ts, variables);
                 break;
             default:
                 ts.putback(t);
@@ -87,7 +88,7 @@ double expression(Token_stream &ts, Symbol_table &variables) {
     }
 }
 
-double declaration(Token_stream &ts, Symbol_table &variables, bool is_const) {
+double declaration(TokenStream &ts, SymbolTable &variables, bool is_const) {
     Token t = ts.get();
     if (t.kind != name)
         throw std::runtime_error("name expected in declaration");
@@ -110,7 +111,7 @@ double declaration(Token_stream &ts, Symbol_table &variables, bool is_const) {
     return variables.define(var, expression(ts, variables), is_const);
 }
 
-double statement(Token_stream &ts, Symbol_table &variables) {
+double statement(TokenStream &ts, SymbolTable &variables) {
     Token t = ts.get();
     switch (t.kind) {
         case let:

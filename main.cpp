@@ -37,12 +37,15 @@
         Выражение + Терм
         Выражение - Терм
 
-    Терм:
+    Третичное_выражение:
         Первичное_выражение
-        Терм * Первичное_выражение
-        Терм / Первичное_выражение
-        Терм % Первичное_выражение
-        Терм ^ Первичное_выражение
+        Первичное_выражение ^ Первичное_выражение
+
+    Вторичное выражение:
+        Первичное_выражение
+        Терм * Третичное_выражение
+        Терм / Третичное_выражение
+        Терм % Третичное_выражение
 
     Первичное_выражение:
         Число
@@ -63,11 +66,11 @@
 #include "grammar.h"
 #include "variable.h"
 
-void clean_up_mess(Token_stream &ts) {
+void clean_up_mess(TokenStream &ts) {
     ts.ignore(print);
 }
 
-void print_help(Token_stream &ts) {
+void print_help(TokenStream &ts) {
     std::cout << "Объявление переменной:" << '\n'
               << "let Имя = Выражение\nconst Имя = Выражение\n\n"
               << "Операции:\n+, -, /, %, ^, *\n\n"
@@ -76,11 +79,10 @@ void print_help(Token_stream &ts) {
               << "Выход: quit\n";
 }
 
-void calculate(Token_stream &ts, Symbol_table &variables) {
+void calculate(TokenStream &ts, SymbolTable &variables) {
     while (std::cin) {
         try {
-            if (std::cin.peek() == '\n')
-                std::cout << prompt;
+            std::cout << prompt;
             Token t = ts.get();
             while (t.kind == print)
                 t = ts.get();
@@ -104,8 +106,8 @@ void calculate(Token_stream &ts, Symbol_table &variables) {
 }
 
 int main() {
-    Token_stream ts;
-    Symbol_table variables;
+    TokenStream ts;
+    SymbolTable variables;
 
     try {
         variables.define("pi", 3.141592653589793, true);

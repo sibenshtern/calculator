@@ -14,9 +14,9 @@ public:
     Token(char ch, std::string n): kind{ch}, name{n} {};
 };
 
-class Token_stream {
+class TokenStream {
 public:
-    Token_stream() {};
+    TokenStream() = default;
 
     Token get();
 

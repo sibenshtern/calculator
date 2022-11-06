@@ -18,9 +18,9 @@ private:
     bool _is_const{false};
 };
 
-class Symbol_table {
+class SymbolTable {
 public:
-    Symbol_table() : var_table{{}} {};
+    SymbolTable() : var_table{{}} {};
 
     double get(std::string);
     void set(std::string, double);

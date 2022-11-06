@@ -1,7 +1,7 @@
 #include "token.h"
 #include <iostream>
 
-void Token_stream::putback(Token t) {
+void TokenStream::putback(Token t) {
     if (full)
         throw std::runtime_error("putback(): buffer is full");
 
@@ -9,7 +9,7 @@ void Token_stream::putback(Token t) {
     full = true;
 }
 
-Token Token_stream::get() {
+Token TokenStream::get() {
     if (full) {
         full = false;
         return buffer;
@@ -80,7 +80,7 @@ Token Token_stream::get() {
     }
 }
 
-void Token_stream::ignore(char c) {
+void TokenStream::ignore(char c) {
     if (full && c == buffer.kind) {
         full = false;
         return;

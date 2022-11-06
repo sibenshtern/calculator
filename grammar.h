@@ -12,7 +12,7 @@ double statement(TokenStream &ts, SymbolTable &variables);
 
 double primary(TokenStream &ts, SymbolTable &variables);
 
-double term(TokenStream &ts, SymbolTable &variables);
+double secondary(TokenStream &ts, SymbolTable &variables);
 
 double expression(TokenStream &ts, SymbolTable &variables);
 

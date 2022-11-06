@@ -35,16 +35,31 @@ double primary(TokenStream &ts, SymbolTable &variables) {
     }
 }
 
-double secondary(TokenStream &ts, SymbolTable &variables) {
+double tertiary(TokenStream &ts, SymbolTable &variables) {
     double left = primary(ts, variables);
     while (true) {
         Token t = ts.get();
         switch (t.kind) {
+            case '^':
+                left = std::pow(left, primary(ts, variables));
+                break;
+            default:
+                ts.putback(t);
+                return left;
+        }
+    }
+}
+
+double secondary(TokenStream &ts, SymbolTable &variables) {
+    double left = tertiary(ts, variables);
+    while (true) {
+        Token t = ts.get();
+        switch (t.kind) {
             case '*':
-                left *= primary(ts, variables);
+                left *= tertiary(ts, variables);
                 break;
             case '/': {
-                double d = primary(ts, variables);
+                double d = tertiary(ts, variables);
                 if (d == 0)
                     throw std::runtime_error("Division by zero");
                 left /= d;
@@ -52,7 +67,7 @@ double secondary(TokenStream &ts, SymbolTable &variables) {
             }
             case '%': {
                 int i1 = narrow_cast<int>(left);
-                int i2 = narrow_cast<int>(primary(ts, variables));
+                int i2 = narrow_cast<int>(tertiary(ts, variables));
 
                 if (i2 == 0)
                     throw std::runtime_error("Division by zero");
@@ -66,8 +81,6 @@ double secondary(TokenStream &ts, SymbolTable &variables) {
         }
     }
 }
-
-double tertiary();
 
 double expression(TokenStream &ts, SymbolTable &variables) {
     double left = secondary(ts, variables);

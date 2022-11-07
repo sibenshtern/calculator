@@ -41,7 +41,7 @@ double tertiary(TokenStream &ts, SymbolTable &variables) {
         Token t = ts.get();
         switch (t.kind) {
             case '^':
-                left = std::pow(left, primary(ts, variables));
+                left = std::pow(left, tertiary(ts, variables));
                 break;
             default:
                 ts.putback(t);
